@@ -18,7 +18,9 @@ AMyMotionControllerPawn::AMyMotionControllerPawn()
 	Camera = CreateDefaultSubobject<UCameraComponent>(TEXT("Camera"));
 	Camera->SetupAttachment(VROrigin);
 
-	UE_LOG(LogTemp, Warning, TEXT("HMD Name "));
+	FName hmdName = UHeadMountedDisplayFunctionLibrary::GetHMDDeviceName();
+
+	UE_LOG(LogTemp, Warning, TEXT("HMD Name %s"), *hmdName.ToString());
 }
 
 // Called when the game starts or when spawned
