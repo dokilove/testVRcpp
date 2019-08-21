@@ -21,6 +21,7 @@ AMyMotionControllerPawn::AMyMotionControllerPawn()
 	FName hmdName = UHeadMountedDisplayFunctionLibrary::GetHMDDeviceName();
 
 	UE_LOG(LogTemp, Warning, TEXT("HMD Name %s"), *hmdName.ToString());
+	UE_LOG(LogTemp, Warning, TEXT("HMD Name %d"), hmdName.GetNumber());
 }
 
 // Called when the game starts or when spawned
