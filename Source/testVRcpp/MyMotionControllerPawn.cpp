@@ -20,8 +20,23 @@ AMyMotionControllerPawn::AMyMotionControllerPawn()
 
 	FName hmdName = UHeadMountedDisplayFunctionLibrary::GetHMDDeviceName();
 
-	UE_LOG(LogTemp, Warning, TEXT("HMD Name %s"), *hmdName.ToString());
-	UE_LOG(LogTemp, Warning, TEXT("HMD Name %d"), hmdName.GetNumber());
+	/*UE_LOG(LogTemp, Warning, TEXT("HMD Name %s"), *hmdName.ToString());
+	UE_LOG(LogTemp, Warning, TEXT("HMD Name %d"), hmdName.GetNumber());*/
+
+	if (hmdName.Compare(TEXT("SteamVR")) == 0 
+		|| hmdName.Compare(TEXT("OculusHMD")) == 0)
+	{
+		UE_LOG(LogTemp, Warning, TEXT("This is SteamVR or OculusHMD"));
+		UHeadMountedDisplayFunctionLibrary::SetTrackingOrigin(EHMDTrackingOrigin::Floor);
+	}
+	else if (hmdName.Compare(TEXT("PSVR")) == 0)
+	{
+		UE_LOG(LogTemp, Warning, TEXT("This is PSVR"));
+		UHeadMountedDisplayFunctionLibrary::SetTrackingOrigin(EHMDTrackingOrigin::Eye);
+
+		VROrigin->AddLocalOffset(FVector(0.0f, 0.0f, DefaultPlayerHeight));
+		UseControllerRollToRotate = true;
+	}
 }
 
 // Called when the game starts or when spawned

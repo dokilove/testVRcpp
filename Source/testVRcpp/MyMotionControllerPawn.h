@@ -31,4 +31,10 @@ public:
 
 	UPROPERTY(VisibleAnywhere, BlueprintReadWrite, Category = "Default")
 		class UCameraComponent* Camera;
+
+	UPROPERTY(VisibleAnywhere, BlueprintReadwrite)
+		float DefaultPlayerHeight = 180.0f;
+
+	UPROPERTY(VisibleAnywhere, BlueprintReadwrite)
+		bool UseControllerRollToRotate = false;
 };
