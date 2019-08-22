@@ -17,13 +17,19 @@ AMyMotionControllerPawn::AMyMotionControllerPawn()
 
 	Camera = CreateDefaultSubobject<UCameraComponent>(TEXT("Camera"));
 	Camera->SetupAttachment(VROrigin);
+}
+
+// Called when the game starts or when spawned
+void AMyMotionControllerPawn::BeginPlay()
+{
+	Super::BeginPlay();
 
 	FName hmdName = UHeadMountedDisplayFunctionLibrary::GetHMDDeviceName();
 
 	/*UE_LOG(LogTemp, Warning, TEXT("HMD Name %s"), *hmdName.ToString());
 	UE_LOG(LogTemp, Warning, TEXT("HMD Name %d"), hmdName.GetNumber());*/
 
-	if (hmdName.Compare(TEXT("SteamVR")) == 0 
+	if (hmdName.Compare(TEXT("SteamVR")) == 0
 		|| hmdName.Compare(TEXT("OculusHMD")) == 0)
 	{
 		UE_LOG(LogTemp, Warning, TEXT("This is SteamVR or OculusHMD"));
@@ -37,13 +43,6 @@ AMyMotionControllerPawn::AMyMotionControllerPawn()
 		VROrigin->AddLocalOffset(FVector(0.0f, 0.0f, DefaultPlayerHeight));
 		UseControllerRollToRotate = true;
 	}
-}
-
-// Called when the game starts or when spawned
-void AMyMotionControllerPawn::BeginPlay()
-{
-	Super::BeginPlay();
-	
 }
 
 // Called every frame
