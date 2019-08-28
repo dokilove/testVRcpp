@@ -37,4 +37,9 @@ public:
 
 	UPROPERTY(VisibleAnywhere, BlueprintReadwrite)
 		bool UseControllerRollToRotate = false;
+	
+	UPROPERTY(VisibleAnywhere, BlueprintReadwrite)
+		class AMyMotionController* LeftController;
+	UPROPERTY(VisibleAnywhere, BlueprintReadwrite)
+		class AMyMotionController* RightController;
 };

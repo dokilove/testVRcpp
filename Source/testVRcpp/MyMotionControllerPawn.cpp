@@ -5,6 +5,8 @@
 #include "Runtime/Engine/Classes/Components/SceneComponent.h"
 #include "Runtime/Engine/Classes/Camera/CameraComponent.h"
 #include "Runtime/HeadMountedDisplay/Public/HeadMountedDisplayFunctionLibrary.h"
+#include "MyMotionController.h"
+#include "Engine/World.h"
 
 // Sets default values
 AMyMotionControllerPawn::AMyMotionControllerPawn()
@@ -43,6 +45,22 @@ void AMyMotionControllerPawn::BeginPlay()
 		VROrigin->AddLocalOffset(FVector(0.0f, 0.0f, DefaultPlayerHeight));
 		UseControllerRollToRotate = true;
 	}
+		
+	LeftController = GetWorld()->SpawnActor<AMyMotionController>(FVector(0, 0, 0), FRotator(0, 0, 0));
+	LeftController->SpawnCollisionHandlingMethod = ESpawnActorCollisionHandlingMethod::AlwaysSpawn;
+	LeftController->OwnsComponent(VROrigin);
+	LeftController->Hand = EControllerHand::Left;
+
+	RightController = GetWorld()->SpawnActor<AMyMotionController>(FVector(0, 0, 0), FRotator(0, 0, 0));
+	RightController->SpawnCollisionHandlingMethod = ESpawnActorCollisionHandlingMethod::AlwaysSpawn;
+	RightController->OwnsComponent(VROrigin);
+	RightController->Hand = EControllerHand::Right;
+	
+	FAttachmentTransformRules ControllerAttachmentRules = FAttachmentTransformRules(EAttachmentRule::SnapToTarget, EAttachmentRule::SnapToTarget, EAttachmentRule::KeepWorld, false);
+
+	LeftController->AttachToComponent(VROrigin, ControllerAttachmentRules);
+	RightController->AttachToComponent(VROrigin, ControllerAttachmentRules);
+
 }
 
 // Called every frame

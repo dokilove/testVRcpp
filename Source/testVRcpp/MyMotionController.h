@@ -58,4 +58,8 @@ public:
 
 	UPROPERTY(VisibleAnywhere, BlueprintReadWrite, Category = "Default")
 		class USteamVRChaperoneComponent* SteamVRChaperone;
+
+
+	UPROPERTY(VisibleAnywhere, BlueprintReadWrite, Category = "Default", meta = (ExposeOnSpawn="true"))
+		EControllerHand Hand;
 };
