@@ -19,7 +19,7 @@ AMyMotionController::AMyMotionController()
 	PrimaryActorTick.bCanEverTick = true;
 		
 	Scene = CreateDefaultSubobject<USceneComponent>(TEXT("Scene"));
-	Scene->SetupAttachment(RootComponent);
+	RootComponent = Scene;
 
 	MotionController = CreateDefaultSubobject<UMotionControllerComponent>(TEXT("MotionController"));
 	MotionController->SetupAttachment(Scene);

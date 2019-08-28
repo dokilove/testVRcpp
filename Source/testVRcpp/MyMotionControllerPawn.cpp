@@ -13,9 +13,12 @@ AMyMotionControllerPawn::AMyMotionControllerPawn()
 {
  	// Set this pawn to call Tick() every frame.  You can turn this off to improve performance if you don't need it.
 	PrimaryActorTick.bCanEverTick = true;
-	
+
+	DefaultSceneRoot = CreateDefaultSubobject<USceneComponent>(TEXT("DefaultSceneRoot"));
+	RootComponent = DefaultSceneRoot;
+
 	VROrigin = CreateDefaultSubobject<USceneComponent>(TEXT("VROrigin"));
-	VROrigin->SetupAttachment(RootComponent);
+	VROrigin->SetupAttachment(DefaultSceneRoot);
 
 	Camera = CreateDefaultSubobject<UCameraComponent>(TEXT("Camera"));
 	Camera->SetupAttachment(VROrigin);
@@ -44,23 +47,21 @@ void AMyMotionControllerPawn::BeginPlay()
 
 		VROrigin->AddLocalOffset(FVector(0.0f, 0.0f, DefaultPlayerHeight));
 		UseControllerRollToRotate = true;
-	}
-		
+	}		
+	   
 	LeftController = GetWorld()->SpawnActor<AMyMotionController>(FVector(0, 0, 0), FRotator(0, 0, 0));
 	LeftController->SpawnCollisionHandlingMethod = ESpawnActorCollisionHandlingMethod::AlwaysSpawn;
-	LeftController->OwnsComponent(VROrigin);
+	LeftController->SetOwner(this);
 	LeftController->Hand = EControllerHand::Left;
 
 	RightController = GetWorld()->SpawnActor<AMyMotionController>(FVector(0, 0, 0), FRotator(0, 0, 0));
 	RightController->SpawnCollisionHandlingMethod = ESpawnActorCollisionHandlingMethod::AlwaysSpawn;
-	RightController->OwnsComponent(VROrigin);
+	RightController->SetOwner(this);
 	RightController->Hand = EControllerHand::Right;
-	
-	FAttachmentTransformRules ControllerAttachmentRules = FAttachmentTransformRules(EAttachmentRule::SnapToTarget, EAttachmentRule::SnapToTarget, EAttachmentRule::KeepWorld, false);
 
+	FAttachmentTransformRules ControllerAttachmentRules = FAttachmentTransformRules(EAttachmentRule::SnapToTarget, EAttachmentRule::SnapToTarget, EAttachmentRule::KeepWorld, false);
 	LeftController->AttachToComponent(VROrigin, ControllerAttachmentRules);
 	RightController->AttachToComponent(VROrigin, ControllerAttachmentRules);
-
 }
 
 // Called every frame

@@ -27,9 +27,12 @@ public:
 	virtual void SetupPlayerInputComponent(class UInputComponent* PlayerInputComponent) override;
 
 	UPROPERTY(VisibleAnywhere, BlueprintReadWrite, Category = "Default")
+		class USceneComponent* DefaultSceneRoot;
+
+	UPROPERTY(VisibleDefaultsOnly, BlueprintReadWrite, Category = "Default")
 		class USceneComponent* VROrigin;
 
-	UPROPERTY(VisibleAnywhere, BlueprintReadWrite, Category = "Default")
+	UPROPERTY(VisibleDefaultsOnly, BlueprintReadWrite, Category = "Default")
 		class UCameraComponent* Camera;
 
 	UPROPERTY(VisibleAnywhere, BlueprintReadwrite)
