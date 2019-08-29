@@ -10,7 +10,7 @@
 #include "Runtime/Engine/Classes/Components/SphereComponent.h"
 #include "Runtime/Engine/Classes/Components/StaticMeshComponent.h"
 #include "../Plugins/Runtime/Steam/SteamVR/Source/SteamVR/Classes/SteamVRChaperoneComponent.h"
-
+#include "Runtime/CoreUObject/Public/UObject/ConstructorHelpers.h"
 
 // Sets default values
 AMyMotionController::AMyMotionController()
@@ -26,6 +26,12 @@ AMyMotionController::AMyMotionController()
 	
 	HandMesh = CreateDefaultSubobject<USkeletalMeshComponent>(TEXT("HandMesh"));
 	HandMesh->SetupAttachment(MotionController);
+
+	static ConstructorHelpers::FObjectFinder<USkeletalMesh> SK_Hand(TEXT("SkeletalMesh'/Game/VirtualReality/Mannequin/Character/Mesh/MannequinHand_Right.MannequinHand_Right'"));
+	if (SK_Hand.Succeeded())
+	{
+		HandMesh->SetSkeletalMesh(SK_Hand.Object);
+	}
 
 	ArcDirection = CreateDefaultSubobject<UArrowComponent>(TEXT("ArcDirection"));
 	ArcDirection->SetupAttachment(HandMesh);
