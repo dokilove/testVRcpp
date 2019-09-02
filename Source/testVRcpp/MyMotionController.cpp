@@ -23,6 +23,7 @@ AMyMotionController::AMyMotionController()
 
 	MotionController = CreateDefaultSubobject<UMotionControllerComponent>(TEXT("MotionController"));
 	MotionController->SetupAttachment(Scene);
+
 	
 	HandMesh = CreateDefaultSubobject<USkeletalMeshComponent>(TEXT("HandMesh"));
 	HandMesh->SetupAttachment(MotionController);
@@ -31,6 +32,13 @@ AMyMotionController::AMyMotionController()
 	if (SK_Hand.Succeeded())
 	{
 		HandMesh->SetSkeletalMesh(SK_Hand.Object);
+	}
+
+	HandMesh->SetAnimationMode(EAnimationMode::AnimationBlueprint);
+	FStringClassReference RightHand_Anim_Ref(TEXT("AnimBlueprint'/Game/VirtualReality/Mannequin/Animations/RightHand_AnimBP.RightHand_AnimBP_C'"));
+	if (UClass* RightHand_Anim_Class = RightHand_Anim_Ref.TryLoadClass<UAnimInstance>())
+	{
+		HandMesh->SetAnimInstanceClass(RightHand_Anim_Class);
 	}
 
 	ArcDirection = CreateDefaultSubobject<UArrowComponent>(TEXT("ArcDirection"));
@@ -60,11 +68,29 @@ AMyMotionController::AMyMotionController()
 	SteamVRChaperone = CreateDefaultSubobject<USteamVRChaperoneComponent>(TEXT("SteamVRChaperone"));
 }
 
+void AMyMotionController::OnConstruction(const FTransform & Transform)
+{
+	Super::OnConstruction(Transform);
+
+	//Update the motion controller Hand
+	MotionController->MotionSource = UEnum::GetValueAsName(Hand);
+
+	UE_LOG(LogClass, Warning, TEXT("Motion source %s"), *(MotionController->MotionSource).ToString());
+}
+
 // Called when the game starts or when spawned
 void AMyMotionController::BeginPlay()
 {
 	Super::BeginPlay();
-	
+
+	switch (Hand)
+	{
+	case EControllerHand::Left:
+		HandMesh->SetWorldScale3D(FVector(1, 1, -1));
+		break;
+	default:
+		break;
+	}
 }
 
 // Called every frame

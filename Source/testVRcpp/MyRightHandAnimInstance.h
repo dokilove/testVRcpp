@@ -25,7 +25,7 @@ class TESTVRCPP_API UMyRightHandAnimInstance : public UAnimInstance
 public:
 	virtual void NativeUpdateAnimation(float DeltaSeconds) override;
 
-	UPROPERTY(VisibleAnywhere, EditAnywhere, BlueprintReadWrite)
+	UPROPERTY(EditAnywhere, BlueprintReadWrite)
 		EGrabEnum GripState;
 	UPROPERTY(EditAnywhere, BlueprintReadWrite)
 		float InterpSpeed = 7.0f;

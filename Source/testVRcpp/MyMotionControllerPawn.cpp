@@ -7,6 +7,8 @@
 #include "Runtime/HeadMountedDisplay/Public/HeadMountedDisplayFunctionLibrary.h"
 #include "MyMotionController.h"
 #include "Engine/World.h"
+#include "ConstructorHelpers.h"
+#include "Kismet/GameplayStatics.h"
 
 // Sets default values
 AMyMotionControllerPawn::AMyMotionControllerPawn()
@@ -22,6 +24,12 @@ AMyMotionControllerPawn::AMyMotionControllerPawn()
 
 	Camera = CreateDefaultSubobject<UCameraComponent>(TEXT("Camera"));
 	Camera->SetupAttachment(VROrigin);
+
+	static ConstructorHelpers::FObjectFinder<UBlueprint> BP_Controller(TEXT("Blueprint'/Game/Blueprints/BP_MotionController.BP_MotionController'"));
+	if (BP_Controller.Succeeded())
+	{
+		Controller = Cast<UClass>(BP_Controller.Object->GeneratedClass);
+	}
 }
 
 // Called when the game starts or when spawned
@@ -49,15 +57,21 @@ void AMyMotionControllerPawn::BeginPlay()
 		UseControllerRollToRotate = true;
 	}		
 	   
-	LeftController = GetWorld()->SpawnActor<AMyMotionController>(FVector(0, 0, 0), FRotator(0, 0, 0));
-	LeftController->SpawnCollisionHandlingMethod = ESpawnActorCollisionHandlingMethod::AlwaysSpawn;
-	LeftController->SetOwner(this);
-	LeftController->Hand = EControllerHand::Left;
+	FTransform SpawnTransform = FTransform(FRotator(0, 0, 0), FVector(0, 0, 0), FVector(1, 1, 1));
+	
+	LeftController = GetWorld()->SpawnActorDeferred<AMyMotionController>(Controller, SpawnTransform, this, nullptr, ESpawnActorCollisionHandlingMethod::AlwaysSpawn);
+	if (LeftController)
+	{
+		LeftController->Hand = EControllerHand::Left;
+		UGameplayStatics::FinishSpawningActor(LeftController, SpawnTransform);
+	}
 
-	RightController = GetWorld()->SpawnActor<AMyMotionController>(FVector(0, 0, 0), FRotator(0, 0, 0));
-	RightController->SpawnCollisionHandlingMethod = ESpawnActorCollisionHandlingMethod::AlwaysSpawn;
-	RightController->SetOwner(this);
-	RightController->Hand = EControllerHand::Right;
+	RightController = GetWorld()->SpawnActorDeferred<AMyMotionController>(Controller, SpawnTransform, this, nullptr, ESpawnActorCollisionHandlingMethod::AlwaysSpawn);
+	if (RightController)
+	{
+		RightController->Hand = EControllerHand::Right;
+		UGameplayStatics::FinishSpawningActor(RightController, SpawnTransform);
+	}
 
 	FAttachmentTransformRules ControllerAttachmentRules = FAttachmentTransformRules(EAttachmentRule::SnapToTarget, EAttachmentRule::SnapToTarget, EAttachmentRule::KeepWorld, false);
 	LeftController->AttachToComponent(VROrigin, ControllerAttachmentRules);

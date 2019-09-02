@@ -14,6 +14,7 @@ class TESTVRCPP_API AMyMotionController : public AActor
 public:	
 	// Sets default values for this actor's properties
 	AMyMotionController();
+	virtual void OnConstruction(const FTransform& Transform) override;
 
 protected:
 	// Called when the game starts or when spawned
