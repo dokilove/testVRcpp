@@ -2,5 +2,6 @@
 
 
 #include "MyPickupActorInterface.h"
+#include "Runtime/Engine/Classes/Components/SceneComponent.h"
 
 // Add default functionality here for any IMyPickupActorInterface functions that are not pure virtual.

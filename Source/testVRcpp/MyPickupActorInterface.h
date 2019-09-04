@@ -22,4 +22,9 @@ class TESTVRCPP_API IMyPickupActorInterface
 
 	// Add interface functions to this class. This is the class that will be inherited to implement this interface.
 public:
+	UFUNCTION(BlueprintCallable, BlueprintImplementableEvent, Category = "Grap")
+		void Pickup(class USceneComponent* AttachTo);
+	UFUNCTION(BlueprintCallable, BlueprintImplementableEvent, Category = "Grap")
+		void Drag();
+
 };
