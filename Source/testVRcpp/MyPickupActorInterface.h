@@ -25,6 +25,6 @@ public:
 	UFUNCTION(BlueprintCallable, BlueprintImplementableEvent, Category = "Grap")
 		void Pickup(class USceneComponent* AttachTo);
 	UFUNCTION(BlueprintCallable, BlueprintImplementableEvent, Category = "Grap")
-		void Drag();
+		void Drop();
 
 };
