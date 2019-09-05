@@ -6,10 +6,4 @@
 
 // Add default functionality here for any IMyPickupActorInterface functions that are not pure virtual.
 
-void IMyPickupActorInterface::Pickup_Implementation(USceneComponent * AttachTo)
-{
-}
 
-void IMyPickupActorInterface::Drop_Implementation()
-{
-}

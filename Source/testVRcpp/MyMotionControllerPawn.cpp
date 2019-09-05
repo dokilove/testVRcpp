@@ -90,5 +90,29 @@ void AMyMotionControllerPawn::SetupPlayerInputComponent(UInputComponent* PlayerI
 {
 	Super::SetupPlayerInputComponent(PlayerInputComponent);
 
+	PlayerInputComponent->BindAction(TEXT("GrabRight"), EInputEvent::IE_Pressed, this, &AMyMotionControllerPawn::RightGrab);
+	PlayerInputComponent->BindAction(TEXT("GrabRight"), EInputEvent::IE_Released, this, &AMyMotionControllerPawn::RightRealese);
+	PlayerInputComponent->BindAction(TEXT("GrabLeft"), EInputEvent::IE_Pressed, this, &AMyMotionControllerPawn::LeftGrab);
+	PlayerInputComponent->BindAction(TEXT("GrabLeft"), EInputEvent::IE_Released, this, &AMyMotionControllerPawn::LeftRealese);
+}
+
+void AMyMotionControllerPawn::RightGrab()
+{
+	RightController->GrabActor();
+}
+
+void AMyMotionControllerPawn::RightRealese()
+{
+	RightController->ReleaseActor();
+}
+
+void AMyMotionControllerPawn::LeftGrab()
+{
+	LeftController->GrabActor();
+}
+
+void AMyMotionControllerPawn::LeftRealese()
+{
+	LeftController->ReleaseActor();
 }
 

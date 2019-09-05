@@ -69,7 +69,7 @@ public:
 		bool bWantsToGrip;
 
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Default", meta = (ExposeOnSpawn = "true"))
-		class UActorComponent* AttachedActor;
+		class AActor* AttachedActor;
 
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Default", meta = (ExposeOnSpawn = "true"))
 		EGripEnum GripState;
@@ -81,5 +81,11 @@ public:
 		void ReleaseActor();
 
 	UFUNCTION(BlueprintCallable, Category = "Grabbing")
-		void GetActorNearHand(class UActorComponent* NearestMesh);
+		class AActor* GetActorNearHand();
+
+	UFUNCTION(BlueprintCallable)
+		void RumbleController(float Intensity);
+
+	UPROPERTY(VisibleDefaultsOnly, BlueprintReadWrite, Category = "HapticEffect")
+		class UHapticFeedbackEffect_Base* MotionControllerHapticFeedbackEffect;
 };

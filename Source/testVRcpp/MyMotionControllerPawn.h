@@ -47,4 +47,13 @@ public:
 		class AMyMotionController* LeftController;
 	UPROPERTY(VisibleAnywhere, BlueprintReadwrite)
 		class AMyMotionController* RightController;
+
+	UFUNCTION()
+		void RightGrab();
+	UFUNCTION()
+		void RightRealese();
+	UFUNCTION()
+		void LeftGrab();
+	UFUNCTION()
+		void LeftRealese();
 };

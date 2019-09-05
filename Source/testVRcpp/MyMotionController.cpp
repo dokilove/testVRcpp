@@ -11,7 +11,14 @@
 #include "Runtime/Engine/Classes/Components/StaticMeshComponent.h"
 #include "../Plugins/Runtime/Steam/SteamVR/Source/SteamVR/Classes/SteamVRChaperoneComponent.h"
 #include "Runtime/CoreUObject/Public/UObject/ConstructorHelpers.h"
-#include "Runtime/NavigationSystem/Public/NavAreas/NavArea_Obstacle.h"
+#include "Kismet/KismetMathLibrary.h"
+#include "MyPickupActorInterface.h"
+#include "GameFramework/PlayerController.h"
+#include "Kismet/GameplayStatics.h"
+#include "Engine/World.h"
+#include "Runtime/Engine/Classes/Haptics/HapticFeedbackEffect_Base.h"
+#include "Animation/AnimInstance.h"
+#include "MyRightHandAnimInstance.h"
 
 // Sets default values
 AMyMotionController::AMyMotionController()
@@ -71,6 +78,12 @@ AMyMotionController::AMyMotionController()
 	RoomScaleMesh->SetupAttachment(Arrow);
 
 	SteamVRChaperone = CreateDefaultSubobject<USteamVRChaperoneComponent>(TEXT("SteamVRChaperone"));
+	
+	ConstructorHelpers::FObjectFinder<UHapticFeedbackEffect_Base> MotionControllerHaptics(TEXT("HapticFeedbackEffect_Curve'/Game/Blueprints/MotionControllerHaptics.MotionControllerHaptics'"));
+	if (MotionControllerHaptics.Succeeded())
+	{
+		MotionControllerHapticFeedbackEffect = MotionControllerHaptics.Object;
+	}
 }
 
 void AMyMotionController::OnConstruction(const FTransform & Transform)
@@ -103,19 +116,75 @@ void AMyMotionController::Tick(float DeltaTime)
 {
 	Super::Tick(DeltaTime);
 
+	// Update Animation of Hand
+	if (AttachedActor != nullptr || bWantsToGrip)
+	{
+		GripState = EGripEnum::Grab;
+	}
+	else
+	{
+		if (GetActorNearHand() != nullptr)
+		{
+			GripState = EGripEnum::CanGrab;
+		}
+		else
+		{
+			if (bWantsToGrip)
+			{
+				GripState = EGripEnum::Grab;
+			}
+			else
+			{
+				GripState = EGripEnum::Open;
+			}
+		}
+	}
+
+	// Update the Animation state of hand mesh
+	UMyRightHandAnimInstance* HandAnimInstance = Cast<UMyRightHandAnimInstance>(HandMesh->GetAnimInstance());
+	if (HandAnimInstance)
+	{
+		HandAnimInstance->GripState = GripState;
+	}
+
 }
 
 void AMyMotionController::GrabActor()
 {
+	bWantsToGrip = true;
+	AActor* NearestActor = GetActorNearHand();
+	if (NearestActor && NearestActor->IsValidLowLevel())
+	{
+		AttachedActor = NearestActor;
+		if (AttachedActor->Implements<UMyPickupActorInterface>())
+		{
+			IMyPickupActorInterface::Execute_Pickup(AttachedActor, MotionController);			
+			RumbleController(0.7f);
+		}
+	}
 }
 
 void AMyMotionController::ReleaseActor()
 {
+	bWantsToGrip = false;
+	if (AttachedActor && AttachedActor->IsValidLowLevel())
+	{
+		if (AttachedActor->GetRootComponent()->GetAttachParent() == MotionController)
+		{
+			if (AttachedActor->Implements<UMyPickupActorInterface>())
+			{
+				IMyPickupActorInterface::Execute_Drop(AttachedActor);
+				RumbleController(0.2f);
+			}
+		}
+
+		AttachedActor = nullptr;
+	}
 }
 
-void AMyMotionController::GetActorNearHand(UActorComponent * NearestMesh)
+class AActor* AMyMotionController::GetActorNearHand()
 {
-	UActorComponent* NearestOverlappingActor = nullptr;
+	AActor* NearestOverlappingActor = nullptr;
 	float NearestOverlap = 10000.0f;
 
 	TArray<AActor*> OverlappedActors;
@@ -125,7 +194,23 @@ void AMyMotionController::GetActorNearHand(UActorComponent * NearestMesh)
 
 	for (int i = 0; i < OverlappedActors.Max(); ++i)
 	{
-		FVector DistanceVector = OverlappedActors[i]->GetActorLocation() - SphereLocation;
+		float Distance = (OverlappedActors[i]->GetActorLocation() - SphereLocation).Size();
+		if (Distance < NearestOverlap)
+		{
+			NearestOverlappingActor = OverlappedActors[i];
+			NearestOverlap = Distance;
+		}
+	}
+
+	return NearestOverlappingActor;
+}
+
+void AMyMotionController::RumbleController(float Intensity)
+{
+	APlayerController* PC = UGameplayStatics::GetPlayerController(GetWorld(), 0);
+	if (PC && PC->IsValidLowLevel())
+	{
+		PC->PlayHapticEffect(MotionControllerHapticFeedbackEffect, Hand, Intensity);
 	}
 }
 
