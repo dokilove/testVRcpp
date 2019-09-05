@@ -18,10 +18,10 @@ class TESTVRCPP_API AMyPickupCube : public AStaticMeshActor, public IMyPickupAct
 public:
 	AMyPickupCube();
 	
-	UFUNCTION(BlueprintCallable, BlueprintNativeEvent, Category = "Grap")
+	UFUNCTION(BlueprintCallable, BlueprintNativeEvent, Category = "Grab")
 		void Pickup(class USceneComponent* AttachTo);
 	void Pickup_Implementation(class USceneComponent* AttachTo);
-	UFUNCTION(BlueprintCallable, BlueprintNativeEvent, Category = "Grap")
+	UFUNCTION(BlueprintCallable, BlueprintNativeEvent, Category = "Grab")
 		void Drop();
 	void Drop_Implementation();
 };

@@ -4,6 +4,7 @@
 
 #include "CoreMinimal.h"
 #include "GameFramework/Actor.h"
+#include "MyRightHandAnimInstance.h"
 #include "MyMotionController.generated.h"
 
 UCLASS()
@@ -63,4 +64,22 @@ public:
 
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Default", meta = (ExposeOnSpawn="true"))
 		EControllerHand Hand;
+
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Default", meta = (ExposeOnSpawn = "true"))
+		bool bWantsToGrip;
+
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Default", meta = (ExposeOnSpawn = "true"))
+		class UActorComponent* AttachedActor;
+
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Default", meta = (ExposeOnSpawn = "true"))
+		EGripEnum GripState;
+
+	UFUNCTION(BlueprintCallable, Category = "Grabbing")
+		void GrabActor();
+
+	UFUNCTION(BlueprintCallable, Category = "Grabbing")
+		void ReleaseActor();
+
+	UFUNCTION(BlueprintCallable, Category = "Grabbing")
+		void GetActorNearHand(class UActorComponent* NearestMesh);
 };

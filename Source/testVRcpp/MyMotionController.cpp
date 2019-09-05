@@ -11,6 +11,7 @@
 #include "Runtime/Engine/Classes/Components/StaticMeshComponent.h"
 #include "../Plugins/Runtime/Steam/SteamVR/Source/SteamVR/Classes/SteamVRChaperoneComponent.h"
 #include "Runtime/CoreUObject/Public/UObject/ConstructorHelpers.h"
+#include "Runtime/NavigationSystem/Public/NavAreas/NavArea_Obstacle.h"
 
 // Sets default values
 AMyMotionController::AMyMotionController()
@@ -50,6 +51,10 @@ AMyMotionController::AMyMotionController()
 	GrabSphere = CreateDefaultSubobject<USphereComponent>(TEXT("GrabSphere"));
 	GrabSphere->SetupAttachment(HandMesh);
 	
+	GrabSphere->SetRelativeLocation(FVector(14.0, 0.22, 1.5));
+	GrabSphere->SetSphereRadius(10.0f);
+	//GrabSphere->AreaClass = new TSubclassOf<UNavArea_Obstacle>();
+
 	ArcEndPoint = CreateDefaultSubobject<UStaticMeshComponent>(TEXT("ArcEndPoint"));
 	ArcEndPoint->SetupAttachment(MotionController);
 
@@ -98,5 +103,29 @@ void AMyMotionController::Tick(float DeltaTime)
 {
 	Super::Tick(DeltaTime);
 
+}
+
+void AMyMotionController::GrabActor()
+{
+}
+
+void AMyMotionController::ReleaseActor()
+{
+}
+
+void AMyMotionController::GetActorNearHand(UActorComponent * NearestMesh)
+{
+	UActorComponent* NearestOverlappingActor = nullptr;
+	float NearestOverlap = 10000.0f;
+
+	TArray<AActor*> OverlappedActors;
+	GrabSphere->GetOverlappingActors(OverlappedActors);
+	
+	FVector SphereLocation = GrabSphere->GetComponentLocation();
+
+	for (int i = 0; i < OverlappedActors.Max(); ++i)
+	{
+		FVector DistanceVector = OverlappedActors[i]->GetActorLocation() - SphereLocation;
+	}
 }
 

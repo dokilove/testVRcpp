@@ -7,7 +7,7 @@
 #include "MyRightHandAnimInstance.generated.h"
 
 UENUM(BlueprintType)
-enum class EGrabEnum : uint8
+enum class EGripEnum : uint8
 {
 	Open		UMETA(DisplayName="Open"),
 	CanGrab		UMETA(DisplayName="CanGrab"),
@@ -26,7 +26,7 @@ public:
 	virtual void NativeUpdateAnimation(float DeltaSeconds) override;
 
 	UPROPERTY(EditAnywhere, BlueprintReadWrite)
-		EGrabEnum GripState;
+		EGripEnum GripState;
 	UPROPERTY(EditAnywhere, BlueprintReadWrite)
 		float InterpSpeed = 7.0f;
 	UPROPERTY(EditAnywhere, BlueprintReadWrite)
