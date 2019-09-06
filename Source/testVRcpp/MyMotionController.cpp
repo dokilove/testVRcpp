@@ -36,6 +36,9 @@ AMyMotionController::AMyMotionController()
 	HandMesh = CreateDefaultSubobject<USkeletalMeshComponent>(TEXT("HandMesh"));
 	HandMesh->SetupAttachment(MotionController);
 
+	HandMesh->SetRelativeLocation(FVector(-12, -0.02, -1.7));
+	HandMesh->SetRelativeRotation(FRotator(0, 0, 90));
+
 	static ConstructorHelpers::FObjectFinder<USkeletalMesh> SK_Hand(TEXT("SkeletalMesh'/Game/VirtualReality/Mannequin/Character/Mesh/MannequinHand_Right.MannequinHand_Right'"));
 	if (SK_Hand.Succeeded())
 	{
@@ -51,9 +54,12 @@ AMyMotionController::AMyMotionController()
 
 	ArcDirection = CreateDefaultSubobject<UArrowComponent>(TEXT("ArcDirection"));
 	ArcDirection->SetupAttachment(HandMesh);
+	ArcDirection->SetRelativeLocation(FVector(14.17, 0.85, -4.3));
+	ArcDirection->ArrowSize = 0.2f;
 
 	ArcSpline = CreateDefaultSubobject<USplineComponent>(TEXT("ArcSpline"));
 	ArcSpline->SetupAttachment(HandMesh);
+	ArcSpline->SetRelativeLocation(FVector(12.53, -1.75, 2.55));
 
 	GrabSphere = CreateDefaultSubobject<USphereComponent>(TEXT("GrabSphere"));
 	GrabSphere->SetupAttachment(HandMesh);
