@@ -40,10 +40,7 @@ public:
 
 	UPROPERTY(VisibleAnywhere, BlueprintReadwrite)
 		bool UseControllerRollToRotate = false;
-
-	UPROPERTY(EditAnywhere, BlueprintReadwrite)
-		class TSubclassOf<class AMyMotionController> ControllerBP;
-
+	
 	class UClass* Controller;
 
 	UPROPERTY(VisibleAnywhere, BlueprintReadwrite)
