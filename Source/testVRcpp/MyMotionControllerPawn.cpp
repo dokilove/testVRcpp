@@ -25,11 +25,11 @@ AMyMotionControllerPawn::AMyMotionControllerPawn()
 	Camera = CreateDefaultSubobject<UCameraComponent>(TEXT("Camera"));
 	Camera->SetupAttachment(VROrigin);
 
-	static ConstructorHelpers::FObjectFinder<UBlueprint> BP_Controller(TEXT("Blueprint'/Game/Blueprints/BP_MotionController.BP_MotionController'"));
+	/*static ConstructorHelpers::FObjectFinder<UBlueprint> BP_Controller(TEXT("Blueprint'/Game/Blueprints/BP_MotionController.BP_MotionController'"));
 	if (BP_Controller.Succeeded())
 	{
 		Controller = Cast<UClass>(BP_Controller.Object->GeneratedClass);
-	}
+	}*/
 }
 
 // Called when the game starts or when spawned
@@ -59,14 +59,14 @@ void AMyMotionControllerPawn::BeginPlay()
 	   
 	FTransform SpawnTransform = FTransform(FRotator(0, 0, 0), FVector(0, 0, 0), FVector(1, 1, 1));
 	
-	LeftController = GetWorld()->SpawnActorDeferred<AMyMotionController>(Controller, SpawnTransform, this, nullptr, ESpawnActorCollisionHandlingMethod::AlwaysSpawn);
+	LeftController = GetWorld()->SpawnActorDeferred<AMyMotionController>(ControllerBP, SpawnTransform, this, nullptr, ESpawnActorCollisionHandlingMethod::AlwaysSpawn);
 	if (LeftController)
 	{
 		LeftController->Hand = EControllerHand::Left;
 		UGameplayStatics::FinishSpawningActor(LeftController, SpawnTransform);
 	}
 
-	RightController = GetWorld()->SpawnActorDeferred<AMyMotionController>(Controller, SpawnTransform, this, nullptr, ESpawnActorCollisionHandlingMethod::AlwaysSpawn);
+	RightController = GetWorld()->SpawnActorDeferred<AMyMotionController>(ControllerBP, SpawnTransform, this, nullptr, ESpawnActorCollisionHandlingMethod::AlwaysSpawn);
 	if (RightController)
 	{
 		RightController->Hand = EControllerHand::Right;

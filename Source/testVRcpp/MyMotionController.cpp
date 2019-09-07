@@ -193,18 +193,23 @@ class AActor* AMyMotionController::GetActorNearHand()
 	AActor* NearestOverlappingActor = nullptr;
 	float NearestOverlap = 10000.0f;
 
+	//UE_LOG(LogClass, Warning, TEXT("Make TArray"));
 	TArray<AActor*> OverlappedActors;
 	GrabSphere->GetOverlappingActors(OverlappedActors);
 	
 	FVector SphereLocation = GrabSphere->GetComponentLocation();
 
-	for (int i = 0; i < OverlappedActors.Max(); ++i)
+	for (auto OverlappedActor : OverlappedActors) 
 	{
-		float Distance = (OverlappedActors[i]->GetActorLocation() - SphereLocation).Size();
-		if (Distance < NearestOverlap)
+		if (OverlappedActor && OverlappedActor->IsValidLowLevel())
 		{
-			NearestOverlappingActor = OverlappedActors[i];
-			NearestOverlap = Distance;
+			float Distance = (OverlappedActor->GetActorLocation() - SphereLocation).Size();
+			//UE_LOG(LogClass, Warning, TEXT("In the loop %f"), Distance);
+			if (Distance < NearestOverlap)
+			{
+				NearestOverlappingActor = OverlappedActor;
+				NearestOverlap = Distance;
+			}
 		}
 	}
 
