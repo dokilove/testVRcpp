@@ -1,4 +1,4 @@
-// Fill out your copyright notice in the Description page of Project Settings.
+﻿// Fill out your copyright notice in the Description page of Project Settings.
 
 
 #include "MyMotionController.h"
@@ -193,18 +193,27 @@ class AActor* AMyMotionController::GetActorNearHand()
 	AActor* NearestOverlappingActor = nullptr;
 	float NearestOverlap = 10000.0f;
 
-	//UE_LOG(LogClass, Warning, TEXT("Make TArray"));
 	TArray<AActor*> OverlappedActors;
 	GrabSphere->GetOverlappingActors(OverlappedActors);
 	
 	FVector SphereLocation = GrabSphere->GetComponentLocation();
 
-	for (auto OverlappedActor : OverlappedActors) 
+	// Assertion failed: (Index >= 0) & (Index < ArrayNum) 에러가 뜸
+	/*for (int i = 0; i < OverlappedActors.Max(); ++i)
+	{
+		float Distance = (OverlappedActors[i]->GetActorLocation() - SphereLocation).Size();
+		if (Distance < NearestOverlap)
+		{
+			NearestOverlappingActor = OverlappedActors[i];
+			NearestOverlap = Distance;
+		}
+	}*/
+
+	for (auto OverlappedActor : OverlappedActors)
 	{
 		if (OverlappedActor && OverlappedActor->IsValidLowLevel())
 		{
 			float Distance = (OverlappedActor->GetActorLocation() - SphereLocation).Size();
-			//UE_LOG(LogClass, Warning, TEXT("In the loop %f"), Distance);
 			if (Distance < NearestOverlap)
 			{
 				NearestOverlappingActor = OverlappedActor;

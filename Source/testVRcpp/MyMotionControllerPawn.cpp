@@ -1,4 +1,4 @@
-// Fill out your copyright notice in the D escription page of Project Settings.
+﻿// Fill out your copyright notice in the D escription page of Project Settings.
 
 
 #include "MyMotionControllerPawn.h"
@@ -25,6 +25,7 @@ AMyMotionControllerPawn::AMyMotionControllerPawn()
 	Camera = CreateDefaultSubobject<UCameraComponent>(TEXT("Camera"));
 	Camera->SetupAttachment(VROrigin);
 
+	// CDO Constructor가 블루프린트 경로를 못 찾는다는 에러메시지가 뜬다
 	/*static ConstructorHelpers::FObjectFinder<UBlueprint> BP_Controller(TEXT("Blueprint'/Game/Blueprints/BP_MotionController.BP_MotionController'"));
 	if (BP_Controller.Succeeded())
 	{
