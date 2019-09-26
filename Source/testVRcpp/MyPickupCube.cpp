@@ -9,7 +9,7 @@ AMyPickupCube::AMyPickupCube()
 {
 	this->bCanBeDamaged = true;
 
-	static ConstructorHelpers::FObjectFinder<UStaticMesh> SM_Body(TEXT("StaticMesh'/Game/Meshes/Cube1.Cube1'"));
+	static ConstructorHelpers::FObjectFinder<UStaticMesh> SM_Body(TEXT("StaticMesh'/Game/Resources/Cube1.Cube1'"));
 	if (SM_Body.Succeeded())
 	{
 		GetStaticMeshComponent()->SetStaticMesh(SM_Body.Object);

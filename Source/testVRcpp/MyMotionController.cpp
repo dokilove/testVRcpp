@@ -19,6 +19,7 @@
 #include "Runtime/Engine/Classes/Haptics/HapticFeedbackEffect_Base.h"
 #include "Animation/AnimInstance.h"
 #include "MyRightHandAnimInstance.h"
+#include "Materials/MaterialInstanceDynamic.h"
 
 // Sets default values
 AMyMotionController::AMyMotionController()
@@ -70,18 +71,83 @@ AMyMotionController::AMyMotionController()
 
 	ArcEndPoint = CreateDefaultSubobject<UStaticMeshComponent>(TEXT("ArcEndPoint"));
 	ArcEndPoint->SetupAttachment(MotionController);
+	static ConstructorHelpers::FObjectFinder<UStaticMesh> SM_ArcEndPoint(TEXT("StaticMesh'/Game/Resources/Sphere1.Sphere1'"));
+	if (SM_ArcEndPoint.Succeeded())
+	{
+		ArcEndPoint->SetStaticMesh(SM_ArcEndPoint.Object);
+		static ConstructorHelpers::FObjectFinder<UMaterial> M_ArcEndPoint(TEXT("Material'/Game/Materials/M_ArcEndpoint.M_ArcEndpoint'"));
+		if (M_ArcEndPoint.Succeeded())
+		{
+			UMaterial* M = (UMaterial*)M_ArcEndPoint.Object;
+			ArcEndPoint->SetMaterial(0, M);
+		}
+	}
+	ArcEndPoint->SetRelativeScale3D(FVector(0.15, 0.15, 0.15));
+	ArcEndPoint->SetGenerateOverlapEvents(false);
+	ArcEndPoint->SetCollisionProfileName("NoCollision");
+	ArcEndPoint->SetVisibility(false);
 
 	TeleportCylinder = CreateDefaultSubobject<UStaticMeshComponent>(TEXT("TeleportCylinder"));
 	TeleportCylinder->SetupAttachment(MotionController);
-	
+	static ConstructorHelpers::FObjectFinder<UStaticMesh> SM_TeleportCylinder(TEXT("StaticMesh'/Game/Resources/Cylinder1.Cylinder1'"));
+	if (SM_TeleportCylinder.Succeeded())
+	{
+		TeleportCylinder->SetStaticMesh(SM_TeleportCylinder.Object);
+		static ConstructorHelpers::FObjectFinder<UMaterialInstance> MI_TeleportCylinder(TEXT("MaterialInstanceConstant'/Game/Materials/MI_TeleportCylinderPreview.MI_TeleportCylinderPreview'"));
+		if (MI_TeleportCylinder.Succeeded())
+		{
+			UMaterialInstance* MI = (UMaterialInstance*)MI_TeleportCylinder.Object;
+			TeleportCylinder->SetMaterial(0, MI);
+		}
+	}
+	TeleportCylinder->SetRelativeScale3D(FVector(0.75, 0.75, 1.0));
+	TeleportCylinder->SetCollisionProfileName("NoCollision");	   
+
 	Ring = CreateDefaultSubobject<UStaticMeshComponent>(TEXT("Ring"));
-	Ring->SetupAttachment(TeleportCylinder);
+	Ring->SetupAttachment(TeleportCylinder); 
+	static ConstructorHelpers::FObjectFinder<UStaticMesh> SM_Ring(TEXT("StaticMesh'/Game/VirtualReality/Meshes/SM_FatCylinder.SM_FatCylinder'"));
+	if (SM_Ring.Succeeded())
+	{
+		Ring->SetStaticMesh(SM_Ring.Object);
+		static ConstructorHelpers::FObjectFinder<UMaterial> M_Ring(TEXT("Material'/Game/Materials/M_ArcEndpoint.M_ArcEndpoint'"));
+		if (M_Ring.Succeeded())
+		{
+			UMaterial* M = (UMaterial*)M_Ring.Object;
+			Ring->SetMaterial(0, M);
+		}
+	}
+	Ring->SetRelativeScale3D(FVector(0.5,0.5,0.15));
 	
 	Arrow = CreateDefaultSubobject<UStaticMeshComponent>(TEXT("Arrow"));
 	Arrow->SetupAttachment(TeleportCylinder);
+	static ConstructorHelpers::FObjectFinder<UStaticMesh> SM_Arrow(TEXT("StaticMesh'/Game/VirtualReality/Meshes/BeaconDirection.BeaconDirection'"));
+	if (SM_Arrow.Succeeded())
+	{
+		Arrow->SetStaticMesh(SM_Arrow.Object);
+		static ConstructorHelpers::FObjectFinder<UMaterial> M_Arrow(TEXT("Material'/Game/Materials/M_ArcEndpoint.M_ArcEndpoint'"));
+		if (M_Arrow.Succeeded())
+		{
+			UMaterial* M = (UMaterial*)M_Arrow.Object;
+			Arrow->SetMaterial(0, M);
+		}
+	}
+	Arrow->SetCollisionProfileName("NoCollision");
 	
 	RoomScaleMesh = CreateDefaultSubobject<UStaticMeshComponent>(TEXT("RoomScaleMesh"));
 	RoomScaleMesh->SetupAttachment(Arrow);
+	static ConstructorHelpers::FObjectFinder<UStaticMesh> SM_RoomScaleMesh(TEXT("StaticMesh'/Game/VirtualReality/Meshes/1x1_cube.1x1_cube'"));
+	if (SM_RoomScaleMesh.Succeeded())
+	{
+		RoomScaleMesh->SetStaticMesh(SM_RoomScaleMesh.Object);
+		static ConstructorHelpers::FObjectFinder<UMaterialInstance> MI_RoomScaleMesh(TEXT("MaterialInstanceConstant'/Game/Materials/MI_ChaperoneOutline.MI_ChaperoneOutline'"));
+		if (MI_RoomScaleMesh.Succeeded())
+		{
+			UMaterialInstance* MI = (UMaterialInstance*)MI_RoomScaleMesh.Object;
+			RoomScaleMesh->SetMaterial(0, MI);
+		}
+	}
+	RoomScaleMesh->SetGenerateOverlapEvents(false);
+	RoomScaleMesh->SetCollisionProfileName("NoCollision");
 
 	SteamVRChaperone = CreateDefaultSubobject<USteamVRChaperoneComponent>(TEXT("SteamVRChaperone"));
 	
